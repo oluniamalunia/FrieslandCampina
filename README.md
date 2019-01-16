@@ -3,7 +3,6 @@
 #rm(list = ls())
 
 library(anytime)
-library(recommenderlab)
 
 setwd("C:/Users/kinse/Desktop/Block 3 MS/data/SPM_Eurosparen_Part1")
 #setwd("C:/Users/sheil/Documents/data blok 3/SPM_Eurosparen_Part1")
@@ -31,26 +30,6 @@ acct.create.sample$id <-
 
 acct.create.sample$ï..id <- NULL # remove the bad variable name
 
-#*****************************************************************#
-#************************ Account Balance ************************#
-#*****************************************************************#
-
-acct.bal <- read.csv2("AccountBalance.csv")
-
-acct.bal$id <- acct.bal$ï..id # change name
-acct.bal$ï..id <- NULL # remove old names
-
-acct.bal$modified <- anytime(acct.bal$modified) # change from factor to datetime variable
-acct.bal$created <- anytime(acct.bal$created) # change from factor to datetime variable
-
-acct.bal.sample <- acct.bal[acct.bal$accountId %in% acct.create.sample$id,] # trim to the sampled data
-
-acct.not <- acct.create.sample[!(acct.create.sample$id %in% acct.bal.sample$accountId),] # check the accounts that did not show up in the balance sample
-
-# confirming that the ids which are not in account balance are not in code usage table. 
-# This means that if an account does not input a code then that account will not show up in the account balance table.
-
-code.2018[ code.2018$accountId  %in% acct.not$id,] # should be empty
 
 #*****************************************************************#
 #************************ Account DemoGeo ************************#
@@ -135,7 +114,8 @@ code.2018$crton <- anytime(code.2018$crton) # convert to date time
 
 ###Shopping orders
 
-setwd("C:/Users/kinse/Desktop/Block 3 MS/data/SPM_Eurosparen_Part2")
+setwd("C:/Users/azwal/Desktop/case study/data/SPM_Eurosparen_Part2")
+getwd()
 
 shop.orders<- read.csv2("ShopOrders.csv", header = TRUE)
 
@@ -150,7 +130,7 @@ shop.orders.sample <-
 
 shop.orders.sample$confirmEmail <- NULL #only null values
 
-shop.orders.sample$id <-
+shop.orders.sample$orderId <-
   shop.orders.sample$X...id # cleaning up some variable names
 
 shop.orders.sample$X...id <- NULL # remove the bad variable name
@@ -193,7 +173,7 @@ shop.product.info$created <-
 shop.product.info.sample <-
   shop.product.info[shop.product.info$modified > "2018-11-01", ] # limit the number of obs to only recently modified data
 
-shop.product.info.sample$id <-
+shop.product.info.sample$productId <-
   shop.product.info.sample$X...id # cleaning up some variable names
 
 shop.product.info.sample$X...id <- NULL # remove the bad variable name
@@ -221,7 +201,7 @@ shop.brand.info$created <-
 # shop.brand.info.sample <-
 #   shop.brand.info[shop.brand.info$modified > "2018-11-01", ] # limit the number of obs to only recently modified data
 
-shop.brand.info$id <-
+shop.brand.info$brandId <-
   shop.brand.info$X...id # cleaning up some variable names
 
 shop.brand.info$X...id <- NULL # remove the bad variable name
@@ -239,7 +219,7 @@ shop.category.info$created <-
 shop.category.info.sample <-
   shop.category.info[shop.category.info$modified > "2018-11-01", ] # limit the number of obs to only recently modified data
 
-shop.category.info.sample$id <-
+shop.category.info.sample$categoryId <-
   shop.category.info.sample$X...id # cleaning up some variable names
 
 shop.category.info.sample$X...id <- NULL # remove the bad variable name
@@ -288,14 +268,14 @@ psam.second.sample$X...id <- NULL # remove the bad variable name
 
 #uppc sku
 UPPC.sku<- read.csv2("UPPC_SKU.csv", header = TRUE)
-UPPC.sku$id <-
+UPPC.sku$sku_id <-
   UPPC.sku$X....id # cleaning up some variable names
 
 UPPC.sku$X...id <- NULL # remove the bad variable name
 
 #uppc brands (only 19)
 UPPC.brands<- read.csv2("UPPC_Brands.csv", header = TRUE)
-UPPC.brands$id <-
+UPPC.brands$brand_id <-
   UPPC.brands$X...id # cleaning up some variable names
 
 UPPC.brands$X...id <- NULL # remove the bad variable name
@@ -303,7 +283,7 @@ UPPC.brands$IsActual <- NULL
 
 #uppc prodgroups
 UPPC.prodgroups <- read.csv2("UPPC_ProdGroups.csv", header = TRUE)
-UPPC.prodgroups$id <-
+UPPC.prodgroups$prodgroup_id <-
   UPPC.prodgroups$X...id # cleaning up some variable names
 
 UPPC.prodgroups$X...id <- NULL # remove the bad variable name
@@ -311,7 +291,7 @@ UPPC.prodgroups$X...id <- NULL # remove the bad variable name
 #uppc categories
 UPPC.categories <- read.csv2("UPPC_categories.csv")
 
-UPPC.categories$id <-
+UPPC.categories$category_id<-
   UPPC.categories$X...id # cleaning up some variable names
 
 UPPC.categories$X...id <- NULL # remove the bad variable name
