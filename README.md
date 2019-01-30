@@ -16,13 +16,15 @@ library(RColorBrewer)
 
 library(lubridate)
 
+setwd("C:/Users/kinse/Desktop/Block 3 MS/data/SPM_Eurosparen_Part1")
+#setwd("C:/Users/sheil/Documents/data blok 3/SPM_Eurosparen_Part1")
+
 source("my_rescale.homals.R")
 
 source("my_plot.homals.R")
 
-setwd("C:/Users/kinse/Desktop/Block 3 MS/data/SPM_Eurosparen_Part1")
 
-#setwd("C:/Users/sheil/Documents/data blok 3/SPM_Eurosparen_Part1")
+
 
 # Part 1
 
@@ -359,7 +361,7 @@ top10products<-dumdum[1:10,]
 
 #### creating product matrix
 setwd("C:/Users/kinse/Dropbox/Blok 3/r")
-setwd("C:/Users/sheil/Dropbox/Erasmus Universiteit Premaster/Master/Blok 3/r")
+#setwd("C:/Users/sheil/Dropbox/Erasmus Universiteit Premaster/Master/Blok 3/r")
 
 product.categories<-read.csv2("shop.product.info2.csv") #dropbox file r
 prod.brand<-data.frame(shop.product.info$productId, shop.product.info$brandId)
@@ -422,27 +424,23 @@ acct.create.sample$age <- as.numeric(acct.create.sample$age)
 acct.create.sample$acct.age <- interval(as.Date(acct.create.sample$created, format = "%m/%d/%Y"),Sys.Date()) %/% months(1) # age of acct in months
 acct.create.sample$last.update <-  interval(as.Date(acct.create.sample$modified, format = "%m/%d/%Y"),Sys.Date()) %/% months(1) # last change to the acct
 
-# create class variables from the frequency purchase data
-acct.create.sample[,which(colnames(acct.create.sample) %in% c("Boter","Drinkzuivel","Eetzuivel","Kaas","Koffieverrijkers","Overige / Onbekend","Sappen","Sports Nutrition","Spuit & slagroom","Vleesvervangers"))] <-
-  lapply(acct.create.sample[,which(colnames(acct.create.sample) %in% c("Boter","Drinkzuivel","Eetzuivel","Kaas","Koffieverrijkers","Overige / Onbekend","Sappen","Sports Nutrition","Spuit & slagroom","Vleesvervangers"))],
-         function(df) {
-           cut(as.numeric(df),
-               breaks = c(-Inf, 6, 11, 16, 21, 51, Inf),
-               labels = c("0-5 purchases", "6-10 purchases", "11-15 purchases", "16-20 purchases", "21-50 purchases", ">50 purchases"),
-               right = FALSE)
-         }
-  )
+### create class variables from the frequency purchase data
+cols <- c("Boter","Drinkzuivel","Eetzuivel","Kaas","Koffieverrijkers","Overige / Onbekend","Sappen","Sports Nutrition","Spuit & slagroom","Vleesvervangers")
+
+acct.create.sample[,(cols):=lapply(.SD, function(df) {
+  cut(as.numeric(df),
+      breaks = c(-Inf, 6, 11, 16, 21, 51, Inf),
+      labels = c("0-5 purchases", "6-10 purchases", "11-15 purchases", "16-20 purchases", "21-50 purchases", ">50 purchases"),
+      right = FALSE)
+}),.SDcols=cols] # this converts the data into class variables from integers
 
 
-acct.create.sample[,which(colnames(acct.create.sample) %in% Brand.names.eur)] <-
-  lapply(acct.create.sample[,which(colnames(acct.create.sample) %in% Brand.names.eur)],
-         function(df) {
-           cut(as.numeric(df),
-               breaks = c(-Inf, 6, 11, 16, 21, 51, Inf),
-               labels = c("0-5 purchases", "6-10 purchases", "11-15 purchases", "16-20 purchases", "21-50 purchases", ">50 purchases"),
-               right = FALSE)
-         }
-  )
+acct.create.sample[,(Brand.names.eur):=lapply(.SD, function(df) {
+  cut(as.numeric(df),
+      breaks = c(-Inf, 6, 11, 16, 21, 51, Inf),
+      labels = c("0-5 purchases", "6-10 purchases", "11-15 purchases", "16-20 purchases", "21-50 purchases", ">50 purchases"),
+      right = FALSE)
+}),.SDcols=Brand.names.eur] # this converts the data into class variables from integers
 
 # top products
 
